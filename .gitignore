@@ -2,4 +2,4 @@
 __pycache__/
 .idea/
 .env
-*.pycgit add .
+*.pycgit python -m venv .venvadd .
