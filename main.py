@@ -1,16 +1,27 @@
-# This is a sample Python script.
+from fastapi import FastAPI
+from dotenv import load_dotenv
+import os
+from langchain_openai import ChatOpenAI
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+load_dotenv()
 
+app = FastAPI()
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY is missing")
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+llm = ChatOpenAI(
+    model="gpt-4o-mini",
+    api_key=OPENAI_API_KEY
+)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+@app.get("/")
+async def home():
+    return {"status": "running"}
+
+@app.get("/test")
+async def test():
+    response = llm.invoke("Say hello")
+    return {"response": response.content}
